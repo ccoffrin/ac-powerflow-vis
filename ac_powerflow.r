@@ -1,85 +1,73 @@
-vhi = 1.2
-vlow = 0.8
+v_fr = 1.0
+v_to = 1.0
 
-ahi = pi/6
-alow = -pi/6
+vd_ub = 0.2
+vd_lb = -0.2
 
-g=0.2
-b=-1
+ad_ub = pi/6
+ad_lb = -pi/6
+
+y_m = 1.0
+y_a = -1.45
+g =  y_m*cos(y_a)
+b = y_m*sin(y_a)
+
+t_m = 1.0
+t_a = 0.0
 
 steps = 100
 
-vvalues = seq(vlow, vhi, (vhi-vlow)/(steps-1))
-avalues = seq(alow, ahi, (ahi-alow)/(steps-1))
-
-#print(vvalues)
-#print(avalues)
-
-#for(t in c(0, 0.1309)){
-#  for(v1 in c(1.1,1.0,0.9)){
-#    for(v2 in c(1.1,1.0,0.9)){
-#      val = v1*v2*cos(t) - v1*v1
-#      print(c(v1, v2, t, val))
-#    }
-#  }
-#}
+vd_vals = seq(vd_lb, vd_ub, (vd_ub-vd_lb)/(steps-1))
+ad_vals = seq(ad_lb, ad_ub, (ad_ub-ad_lb)/(steps-1))
 
 pv = matrix(nrow = steps, ncol = steps)
 qv = matrix(nrow = steps, ncol = steps)
 
 for (i in 1:steps) {
-	for (j in 1:steps) {
-	  v1 = 0.8;
-	  v2 = vvalues[i];
-	  a = avalues[j];
-		
-		pv[i,j] = (v1**2-v1*v2*cos(a))*g + (-v1*v2*sin(a))*b
-		qv[i,j] = (-v1*v2*sin(a))*g + (-v1^2+v1*v2*cos(a))*b
-	}
+     for (j in 1:steps) {
+          v1 = v_fr;
+          v2 = v_to + vd_vals[i];
+          ad = ad_vals[j];
+
+          pv[i,j] =  g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
+          qv[i,j] = -b*v1^2/t_m^2 + b*v1/t_m*v2*cos(ad - t_a) - g*v1/t_m*v2*sin(ad - t_a)
+     }
 }
 
-#print(tv);
-
-#maxval = max(max(tv),-min(tv))
-#print(maxval)
-#colorsteps = seq(-maxval, maxval, steps)
-#print(colorsteps)
-
-#heatmap(tv, Rowv=NA, Colv=NA, col=heat.colors(256))
-#heatmap(av, Rowv=NA, Colv=NA, col=heat.colors(256))
-#heatmap(tv, Rowv=NA, Colv=NA, col=heat.colors(256))
-
-#plot3d(x=1:steps, y=1:steps, av)
-#persp(values, values, tv, theta=20)
-#persp(values, values, av, theta=20)
-
 ps = 14
+fileName = "ac_flow.pdf"
+pdf(fileName, pointsize=ps, width=14, height=7)
 
-fileName = "activeField.pdf"
-pdf(fileName, pointsize=ps, width=7, height=7)
-contour(x = vvalues,
-               y = avalues,
-               pv,
-               #color = terrain.colors,
-               #levels = colorsteps,
-               nlevels = 10,
-               labcex=1.0,
-               plot.title = title(main = "Active Power Field",
-               xlab = "Voltage Difference", ylab = "Angle Difference (rad)")
-               )
-dev.off()
+attach(mtcars)
+par(mfrow=c(1,2), oma=c(0,0,2.5,0)) 
 
+contour(
+     x = vd_vals,
+     y = ad_vals,
+     pv,
+     #color = terrain.colors,
+     #levels = colorsteps,
+     nlevels = 8,
+     labcex=1.0,
+     plot.title = title(main = "Active Power (p)",
+     xlab = "Voltage Difference", ylab = "Angle Difference (rad)")
+)
 
-fileName = "reactiveField.pdf"
-pdf(fileName, pointsize=ps, width=7, height=7)
-contour(x = vvalues,
-               y = avalues,
-               qv,
-               #color = terrain.colors,
-               #levels = colorsteps,
-               nlevels = 15,
-               labcex=1.0,
-               plot.title = title(main = "Reactive Power Field",
-               xlab = "Voltage Difference", ylab = "Angle Difference (rad)")
-               )
+contour(
+     x = vd_vals,
+     y = ad_vals,
+     qv,
+     #color = terrain.colors,
+     #levels = colorsteps,
+     nlevels = 8,
+     labcex=1.0,
+     plot.title = title(main = "Reactive Power (q)",
+     xlab = "Voltage Difference", ylab = "Angle Difference (rad)")
+)
+
+title("AC Power Flow Fields (from side, p.u.)", outer=TRUE)
+mtext(
+     sprintf("v1 = %.3f, g = %.3f, b = %.3f, tr = %.3f, as = %.3f", v_fr, g, b, t_m, t_a), 
+     line=-1, outer=TRUE)
+
 dev.off()
