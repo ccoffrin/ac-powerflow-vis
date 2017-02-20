@@ -1,6 +1,9 @@
 #!/bin/bash
 
 echo "making pdfs directories"
+mkdir voltage_magnitude_flow
+mkdir voltage_magnitude_loss
+
 mkdir admittance_angle_flow
 mkdir admittance_angle_loss
 # mkdir admittance_magnitude_flow
@@ -8,7 +11,8 @@ mkdir admittance_angle_loss
 
 mkdir transformer_angle_flow
 mkdir transformer_angle_loss
-
+mkdir transformer_magnitude_flow
+mkdir transformer_magnitude_loss
 
 echo "making pdfs"
 R CMD BATCH --no-save --no-restore ac_power_examples.r
@@ -17,6 +21,9 @@ R CMD BATCH --no-save --no-restore transformer_animations.r
 
 
 echo "making gifs"
+convert -density 200 -dispose previous voltage_magnitude_flow/*.pdf voltage_magnitude_flow.gif
+convert -density 200 -dispose previous voltage_magnitude_loss/*.pdf voltage_magnitude_loss.gif
+
 convert -density 200 -dispose previous admittance_angle_flow/*.pdf admittance_angle_flow.gif
 convert -density 200 -dispose previous admittance_angle_loss/*.pdf admittance_angle_loss.gif
 # convert -density 200 -dispose previous admittance_magnitude_flow/*.pdf admittance_magnitude_flow.gif

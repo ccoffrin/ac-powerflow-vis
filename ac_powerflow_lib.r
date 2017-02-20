@@ -13,18 +13,24 @@ ac_powerflow = function(
 
      steps = 100
 
-     vd_vals = seq(vd_lb, vd_ub, (vd_ub-vd_lb)/(steps-1))
+     v_to_delta_lb = vd_lb + v_fr - v_to
+     v_to_delta_ub = vd_ub + v_fr - v_to
+
+     v_to_delta = seq(v_to_delta_lb, v_to_delta_ub, (v_to_delta_ub-v_to_delta_lb)/(steps-1))
+     vd_vals = (rep(v_to, steps) + v_to_delta) - rep(v_fr, steps)
      ad_vals = seq(ad_lb, ad_ub, (ad_ub-ad_lb)/(steps-1))
+
+     stopifnot(vd_lb <= min(vd_vals)+0.000001)
+     stopifnot(vd_ub >= max(vd_vals)-0.000001)
 
      pv = matrix(nrow = steps, ncol = steps)
      qv = matrix(nrow = steps, ncol = steps)
 
      for (i in 1:steps) {
+          v1 = v_fr;
+          v2 = v_to + v_to_delta[i];
           for (j in 1:steps) {
-               v1 = v_fr;
-               v2 = v_to + vd_vals[i];
                ad = ad_vals[j];
-
                pv[i,j] =  g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
                qv[i,j] = -b*v1^2/t_m^2 + b*v1/t_m*v2*cos(ad - t_a) - g*v1/t_m*v2*sin(ad - t_a)
           }
@@ -33,7 +39,6 @@ ac_powerflow = function(
      ps = 14
      pdf(file_name, pointsize=ps, width=14, height=7, bg="white")
 
-     #attach(mtcars)
      par(mfrow=c(1,2), oma=c(0,0,2.5,0)) 
 
      contour(
@@ -84,33 +89,32 @@ ac_powerloss = function(
 
      steps = 100
 
-     vd_vals = seq(vd_lb, vd_ub, (vd_ub-vd_lb)/(steps-1))
+     v_to_delta_lb = vd_lb + v_fr - v_to
+     v_to_delta_ub = vd_ub + v_fr - v_to
+
+     v_to_delta = seq(v_to_delta_lb, v_to_delta_ub, (v_to_delta_ub-v_to_delta_lb)/(steps-1))
+     vd_vals = (rep(v_to, steps) + v_to_delta) - rep(v_fr, steps)
      ad_vals = seq(ad_lb, ad_ub, (ad_ub-ad_lb)/(steps-1))
 
-     pv_fr = matrix(nrow = steps, ncol = steps)
-     qv_fr = matrix(nrow = steps, ncol = steps)
+     stopifnot(vd_lb <= min(vd_vals)+0.000001)
+     stopifnot(vd_ub >= max(vd_vals)-0.000001)
 
-     pv_to = matrix(nrow = steps, ncol = steps)
-     qv_to = matrix(nrow = steps, ncol = steps)
+     pv = matrix(nrow = steps, ncol = steps)
+     qv = matrix(nrow = steps, ncol = steps)
 
      for (i in 1:steps) {
+          v1 = v_fr;
+          v2 = v_to + v_to_delta[i];
           for (j in 1:steps) {
-               v1 = v_fr;
-               v2 = v_to + vd_vals[i];
                ad = ad_vals[j];
-
-               pv_fr[i,j] =  g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
-               qv_fr[i,j] = -b*v1^2/t_m^2 + b*v1/t_m*v2*cos(ad - t_a) - g*v1/t_m*v2*sin(ad - t_a)
-
-               pv_to[i,j] =  g*v2^2 - g*v1/t_m*v2*cos(ad + t_a) - b*v1/t_m*v2*sin(ad + t_a)
-               qv_to[i,j] = -b*v2^2 + b*v1/t_m*v2*cos(ad + t_a) - g*v1/t_m*v2*sin(ad + t_a)
+               pv[i,j] =  g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
+               qv[i,j] = -b*v1^2/t_m^2 + b*v1/t_m*v2*cos(ad - t_a) - g*v1/t_m*v2*sin(ad - t_a)
           }
      }
 
      ps = 14
      pdf(file_name, pointsize=ps, width=14, height=7, bg="white")
 
-     #attach(mtcars)
      par(mfrow=c(1,2), oma=c(0,0,2.5,0)) 
 
      contour(
