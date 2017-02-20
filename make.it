@@ -6,13 +6,23 @@ mkdir admittance_angle_loss
 # mkdir admittance_magnitude_flow
 # mkdir admittance_magnitude_loss
 
+mkdir transformer_angle_flow
+mkdir transformer_angle_loss
+
+
 echo "making pdfs"
 R CMD BATCH --no-save --no-restore ac_power_examples.r
 R CMD BATCH --no-save --no-restore admittance_animations.r
+R CMD BATCH --no-save --no-restore transformer_animations.r
+
 
 echo "making gifs"
 convert -density 200 -dispose previous admittance_angle_flow/*.pdf admittance_angle_flow.gif
 convert -density 200 -dispose previous admittance_angle_loss/*.pdf admittance_angle_loss.gif
-
 # convert -density 200 -dispose previous admittance_magnitude_flow/*.pdf admittance_magnitude_flow.gif
 # convert -density 200 -dispose previous admittance_magnitude_loss/*.pdf admittance_magnitude_loss.gif
+
+convert -density 200 -dispose previous transformer_angle_flow/*.pdf transformer_angle_flow.gif
+convert -density 200 -dispose previous transformer_angle_loss/*.pdf transformer_angle_loss.gif
+convert -density 200 -dispose previous transformer_magnitude_flow/*.pdf transformer_magnitude_flow.gif
+convert -density 200 -dispose previous transformer_magnitude_loss/*.pdf transformer_magnitude_loss.gif
