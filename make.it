@@ -1,15 +1,18 @@
 #!/bin/bash
 
-if [ ! -d "pdfs" ]
-then
-    echo "making pdfs directories"
-    mkdir admittance_flow_animation
-    mkdir admittance_loss_animation
-fi
+echo "making pdfs directories"
+mkdir admittance_angle_flow
+mkdir admittance_angle_loss
+# mkdir admittance_magnitude_flow
+# mkdir admittance_magnitude_loss
 
 echo "making pdfs"
-R CMD BATCH --no-save --no-restore admittance_animation.r
+R CMD BATCH --no-save --no-restore ac_power_examples.r
+R CMD BATCH --no-save --no-restore admittance_animations.r
 
 echo "making gifs"
-convert -density 200 -dispose previous admittance_flow_animation/*.pdf admittance_flow_animation.gif
-convert -density 200 -dispose previous admittance_loss_animation/*.pdf admittance_loss_animation.gif
+convert -density 200 -dispose previous admittance_angle_flow/*.pdf admittance_angle_flow.gif
+convert -density 200 -dispose previous admittance_angle_loss/*.pdf admittance_angle_loss.gif
+
+# convert -density 200 -dispose previous admittance_magnitude_flow/*.pdf admittance_magnitude_flow.gif
+# convert -density 200 -dispose previous admittance_magnitude_loss/*.pdf admittance_magnitude_loss.gif
