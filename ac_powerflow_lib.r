@@ -99,16 +99,22 @@ ac_powerloss = function(
      stopifnot(vd_lb <= min(vd_vals)+0.000001)
      stopifnot(vd_ub >= max(vd_vals)-0.000001)
 
-     pv = matrix(nrow = steps, ncol = steps)
-     qv = matrix(nrow = steps, ncol = steps)
+     pv_fr = matrix(nrow = steps, ncol = steps)
+     qv_fr = matrix(nrow = steps, ncol = steps)
+
+     pv_to = matrix(nrow = steps, ncol = steps)
+     qv_to = matrix(nrow = steps, ncol = steps)
 
      for (i in 1:steps) {
           v1 = v_fr;
           v2 = v_to + v_to_delta[i];
           for (j in 1:steps) {
                ad = ad_vals[j];
-               pv[i,j] =  g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
-               qv[i,j] = -b*v1^2/t_m^2 + b*v1/t_m*v2*cos(ad - t_a) - g*v1/t_m*v2*sin(ad - t_a)
+               pv_fr[i,j] =  g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
+               qv_fr[i,j] = -b*v1^2/t_m^2 + b*v1/t_m*v2*cos(ad - t_a) - g*v1/t_m*v2*sin(ad - t_a)
+
+               pv_to[i,j] =  g*v2^2 - g*v1/t_m*v2*cos(ad + t_a) - b*v1/t_m*v2*sin(ad + t_a)
+               qv_to[i,j] = -b*v2^2 + b*v1/t_m*v2*cos(ad + t_a) - g*v1/t_m*v2*sin(ad + t_a)
           }
      }
 

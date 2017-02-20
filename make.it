@@ -16,6 +16,7 @@ mkdir transformer_magnitude_loss
 
 echo "making pdfs"
 R CMD BATCH --no-save --no-restore ac_power_examples.r
+R CMD BATCH --no-save --no-restore voltage_animations.r
 R CMD BATCH --no-save --no-restore admittance_animations.r
 R CMD BATCH --no-save --no-restore transformer_animations.r
 
