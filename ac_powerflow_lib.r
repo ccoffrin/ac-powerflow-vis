@@ -31,7 +31,7 @@ ac_powerflow = function(
      }
 
      ps = 14
-     pdf(file_name, pointsize=ps, width=14, height=7)
+     pdf(file_name, pointsize=ps, width=14, height=7, bg="white")
 
      #attach(mtcars)
      par(mfrow=c(1,2), oma=c(0,0,2.5,0)) 
@@ -108,7 +108,7 @@ ac_powerloss = function(
      }
 
      ps = 14
-     pdf(file_name, pointsize=ps, width=14, height=7)
+     pdf(file_name, pointsize=ps, width=14, height=7, bg="white")
 
      #attach(mtcars)
      par(mfrow=c(1,2), oma=c(0,0,2.5,0)) 

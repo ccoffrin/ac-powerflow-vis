@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ ! -d "pdfs" ]
+then
+    echo "making pdfs directories"
+    mkdir admittance_flow_animation
+    mkdir admittance_loss_animation
+fi
+
+echo "making pdfs"
+R CMD BATCH --no-save --no-restore admittance_animation.r
+
+echo "making gifs"
+convert -density 200 -dispose previous admittance_flow_animation/*.pdf admittance_flow_animation.gif
+convert -density 200 -dispose previous admittance_loss_animation/*.pdf admittance_loss_animation.gif
