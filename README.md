@@ -7,4 +7,4 @@ These R scripts produce figures and animations of AC Power Flow over a line, whi
 This repository contains the source files required for generating the visualizations.  The `make.it` script builds all of the figures and animations.  An example of the output of the script can be viewed [here](tbd).  The `ac_power_examples.r` illustrates how to change the line parameters to and generate new figures.
 
 ### Requirements
-This script requires R for building the PDFs and imagemagick's convert for combining them into a gif.  The bash terminal is required for `make.it`.  A typical compilation of `make.it` is around 10 minutes.
+This script requires R for building the PDFs and imagemagick's convert for combining them into a gif.  The bash terminal is required for `make.it`.  A typical compilation of `make.it` is around 15 minutes.
