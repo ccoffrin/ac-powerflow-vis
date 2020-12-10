@@ -154,3 +154,45 @@ ac_powerloss = function(
 
      dev.off()
 }
+
+
+
+ac_dc_comparison = function(
+     file_name, 
+     v_fr = 1.0, v_to = 1.0,
+     ad_ub = 1.5*pi/2, ad_lb = -1.5*pi/2,
+     y_m = 1.0, y_a = -1.45,
+     t_m = 1.0, t_a = 0.0
+     ) {
+
+     g =  y_m*cos(y_a)
+     b = y_m*sin(y_a)
+
+     steps = 100
+
+     ad_vals = seq(ad_lb, ad_ub, (ad_ub-ad_lb)/(steps-1))
+
+     ac_p = rep(0.0, steps)
+     dc_p = rep(0.0, steps)
+
+      v1 = v_fr
+      v2 = v_to
+      for (i in 1:steps) {
+           ad = ad_vals[i];
+           ac_p[i] = g*v1^2/t_m^2 - g*v1/t_m*v2*cos(ad - t_a) - b*v1/t_m*v2*sin(ad - t_a)
+           dc_p[i] = -b*v1/t_m*v2*(ad - t_a)
+      }
+
+     ps = 16
+     pdf(file_name, pointsize=ps, width=7, height=7, bg="white")
+         x_range = c(min(ad_vals), max(ad_vals))
+         y_range = c(min(ac_p, dc_p), max(ac_p, dc_p))
+         plot(x_range, y_range, type="n", xlab = "Voltage Angle Difference (rad)", ylab = "Active Power (p.u.)", main="AC vs DC Active Power Comparison")
+         abline(h=0.0, col=rgb(0,0,0,0.5))
+         abline(v=0.0, col=rgb(0,0,0,0.5))
+         points(ad_vals, dc_p, type="l", lw=3, col="dodgerblue")
+         points(ad_vals, ac_p, type="l", lw=3, col="darkorange")
+         legend("topleft", legend=c("AC Power Flow", "DC Power Flow"), lty=1, lw=3, col=c("darkorange", "dodgerblue"), bg="white")
+     dev.off()
+}
+
